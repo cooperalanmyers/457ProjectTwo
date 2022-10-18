@@ -10,6 +10,9 @@
 #define SERV_PORT 3000 /*port*/
 #define LISTENQ 8	   /*maximum number of client connections*/
 
+// IPC pipes with forking
+// https://www.tutorialspoint.com/inter_process_communication/inter_process_communication_pipes.htm
+
 int main(int argc, char **argv)
 {
 	int listenfd, connfd, n;
