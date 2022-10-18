@@ -12,17 +12,17 @@
 
 int main (int argc, char **argv)
 {
- int listenfd, connfd, n;
- pid_t childpid;
- socklen_t clilen;
- char buf[MAXLINE];
- struct sockaddr_in cliaddr, server;
+	int listenfd, connfd, n;
+	pid_t childpid;
+ 	socklen_t clilen;
+ 	char buf[MAXLINE];
+ 	struct sockaddr_in cliaddr, server;
 
  //Create a socket for the server
  //If sockfd<0 there was an error in the creation of the socket
  if ((listenfd = socket (AF_INET, SOCK_STREAM, 0)) <0) {
-  perror("Problem in creating the socket");
-  exit(2);
+  	perror("Problem in creating the socket");
+  	exit(2);
  }
 
 
@@ -41,18 +41,18 @@ int main (int argc, char **argv)
 
  for ( ; ; ) {
 
-  clilen = sizeof(cliaddr);
-  //accept a connection
-  connfd = accept (listenfd, (struct sockaddr *) &cliaddr, &clilen);
+  	clilen = sizeof(cliaddr);
+  	//accept a connection
+  	connfd = accept (listenfd, (struct sockaddr *) &cliaddr, &clilen);
 
-  printf("%s\n","Received request...");
+  	printf("%s\n","Received request...");
 
   if ( (childpid = fork ()) == 0 ) {//if it’s 0, it’s child process
 
-    printf ("%s\n","Child created for dealing with client requests");
+    	printf ("%s\n","Child created for dealing with client requests");
 
-    //close listening socket
-    close (listenfd);
+    	//close listening socket
+    	close (listenfd);
 
     while ( (n = recv(connfd, buf, MAXLINE,0)) > 0)  {
       printf("%s","String received from and resent to the client:");
@@ -61,8 +61,8 @@ int main (int argc, char **argv)
     }
 
     if (n < 0)
-      printf("%s\n", "Read error");
-    exit(0);
+      	printf("%s\n", "Read error");
+   	 exit(0);
   }
  //close socket of the server
  close(connfd);
