@@ -10,11 +10,9 @@
 #define SERV_PORT 3000 /*port*/
 #define LISTENQ 8	   /*maximum number of client connections*/
 
-// IPC pipes with forking
-// https://www.tutorialspoint.com/inter_process_communication/inter_process_communication_pipes.htm
+/*IPC pipes with forking www.tutorialspoint.com/inter_process_communication/inter_process_communication_pipes.htm*/
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
 	int listenfd, connfd, n;
 	pid_t childpid;
 	socklen_t clilen;
@@ -38,7 +36,7 @@ int main(int argc, char **argv)
 	bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
 
 	// listen to the socket by creating a connection queue, then wait for clients
-	listen(listenfd, 8);
+	listen(listenfd,  LISTENQ);
 
 	printf("%s\n", "Server running...waiting for connections.");
 
@@ -61,6 +59,7 @@ int main(int argc, char **argv)
 
 			while ((n = recv(connfd, buf, MAXLINE, 0)) > 0)
 			{
+				// include pipe structure to allow multiple clients to connect
 				printf("%s", "String received from and resent to the client:");
 				puts(buf);
 				send(connfd, buf, n, 0);
