@@ -45,18 +45,20 @@ int main(int argc, char **argv)
     }
 
     while (fgets(sendline, MAXLINE, stdin) != NULL)
-    {
-        // include while (1) for client to send multiple messages
-        send(sockfd, sendline, strlen(sendline), 0);
-
-        if (recv(sockfd, recvline, MAXLINE, 0) == 0)
+    {   // allow clients to send multiple messages
+        for (;;) // TODO: check if anything else needs to be added
         {
-            // error: server terminated prematurely
-            perror("The server terminated prematurely");
-            exit(4);
+            send(sockfd, sendline, strlen(sendline), 0);
+
+            if (recv(sockfd, recvline, MAXLINE, 0) == 0)
+            {
+                // error: server terminated prematurely
+                perror("The server terminated prematurely");
+                exit(4);
+            }
+            printf("%s", "String received from the server: ");
+            fputs(recvline, stdout);
         }
-        printf("%s", "String received from the server: ");
-        fputs(recvline, stdout);
     }
 
     exit(0);
