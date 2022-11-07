@@ -77,17 +77,18 @@ int main(int argc, char **argv) {
 			if (n < 0)
 				printf("%s\n", "Read error");
 			exit(0);
-		else // parent process
-		{
-		close(pipefd_1[0]); // read closed
-        	close(pipefd_2[1]); // write closed
+			
+			else // parent process
+			{
+				close(pipefd_1[0]); // read closed
+        			close(pipefd_2[1]); // write closed
 
-        	printf('Writing to %s buffer\n', buf1);
-        	write(pipefd_1[1], buf1, sizeof(buf1));
-        
-        	printf('Reaing from %s buffer\n', buf2);
-        	read(pipefd_2[0], buf2, sizeof(buf2));	
-		}	
+        			printf('Writing to %s buffer\n', buf1);
+        			write(pipefd_1[1], buf1, sizeof(buf1));
+        	
+        			printf('Reaing from %s buffer\n', buf2);
+        			read(pipefd_2[0], buf2, sizeof(buf2));	
+			}	
 		}
 		// close socket of the server
 		close(connfd);
