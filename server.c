@@ -18,8 +18,11 @@ int main(int argc, char **argv) {
 	socklen_t clilen;
 	char buf1[MAXLINE];
     	char buf2[MAXLINE];
+	
+	// Creating two pipes for sending/recieving
    	int pipefd_1[2]; // parent write open, read close
     	int pipefd_2[2]; // parent write close, read open
+	
 	struct sockaddr_in cliaddr, servaddr;
 
 	// Create a socket for the server
@@ -64,6 +67,8 @@ int main(int argc, char **argv) {
 			{
 				// include pipe structure to allow multiple clients to connect
 				printf("%s", "String received from and resent to the client:");
+				
+				// Closing ends of pipe that will not be used in child process
 				close(pipefd_1[1]); // write closed
                 		close(pipefd_2[0]); // read closed
 
@@ -80,13 +85,14 @@ int main(int argc, char **argv) {
 			
 			else // parent process
 			{
+				// Closing ends of pipe that will not be used in parent process
 				close(pipefd_1[0]); // read closed
         			close(pipefd_2[1]); // write closed
 
         			printf('Writing to %s buffer\n', buf1);
         			write(pipefd_1[1], buf1, sizeof(buf1));
         	
-        			printf('Reaing from %s buffer\n', buf2);
+        			printf('Reading from %s buffer\n', buf2);
         			read(pipefd_2[0], buf2, sizeof(buf2));	
 			}	
 		}
