@@ -79,9 +79,16 @@ int main(int argc, char **argv) {
                 		read(pipefd_1[0], buf1, sizeof(buf1));
 			}
 
-			if (n < 0)
+			// Fix this if statement
+			/*if (n < 0)
 				printf("%s\n", "Read error");
 			exit(0);
+			*/
+			
+			if (n < 0) 
+			{
+				printf("%s\n", "Read error");
+			}
 			
 			else // parent process
 			{
@@ -94,7 +101,8 @@ int main(int argc, char **argv) {
         	
         			printf('Reading from %s buffer\n', buf2);
         			read(pipefd_2[0], buf2, sizeof(buf2));	
-			}	
+			}
+			exit(0);
 		}
 		// close socket of the server
 		close(connfd);
