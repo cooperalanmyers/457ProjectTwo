@@ -93,20 +93,19 @@ int main(int argc, char **argv) {
 				printf("%s\n", "Read error");
 				exit(0);
 			}
-			
-			else // parent process
-			{
-				// Closing ends of pipe that will not be used in parent process
-				close(pipefd_1[0]); // read closed
-        			close(pipefd_2[1]); // write closed
+		}
 
-        			//printf('Writing to %s buffer\n', buf1);
-        			write(pipefd_1[1], buf1, sizeof(buf1));
+		else // parent process
+		{
+			// Closing ends of pipe that will not be used in parent process
+			close(pipefd_1[0]); // read closed
+        		close(pipefd_2[1]); // write closed
+
+        		//printf('Writing to %s buffer\n', buf1);
+        		write(pipefd_1[1], buf1, sizeof(buf1));
         	
-        			//printf('Reading from %s buffer\n', buf2);
-        			read(pipefd_2[0], buf2, sizeof(buf2));	
-			}
-			//exit(0);
+        		//printf('Reading from %s buffer\n', buf2);
+        		read(pipefd_2[0], buf2, sizeof(buf2));	
 		}
 		// close socket of the server
 		close(connfd);
