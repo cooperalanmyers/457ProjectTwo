@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
 			// close listening socket
 			close(listenfd);
 
-			while ((n = recv(connfd, buf, MAXLINE, 0)) > 0)
+			while ((n = recv(connfd, buf1, MAXLINE, 0)) > 0)
 			{
 				// include pipe structure to allow multiple clients to connect
 				printf("%s", "String received from and resent to the client:");
@@ -72,10 +72,10 @@ int main(int argc, char **argv) {
 				close(pipefd_1[1]); // write closed
                 		close(pipefd_2[0]); // read closed
 
-                		printf('Writing to %s buffer\n', buf2);
+                		//printf('Writing to %s buffer\n', buf2);
                 		write(pipefd_2[1], buf2, sizeof(buf2));
 
-                		printf('Reading from %s buffer\n', buf1);
+                		//printf('Reading from %s buffer\n', buf1);
                 		read(pipefd_1[0], buf1, sizeof(buf1));
 			}
 
@@ -96,10 +96,10 @@ int main(int argc, char **argv) {
 				close(pipefd_1[0]); // read closed
         			close(pipefd_2[1]); // write closed
 
-        			printf('Writing to %s buffer\n', buf1);
+        			//printf('Writing to %s buffer\n', buf1);
         			write(pipefd_1[1], buf1, sizeof(buf1));
         	
-        			printf('Reading from %s buffer\n', buf2);
+        			//printf('Reading from %s buffer\n', buf2);
         			read(pipefd_2[0], buf2, sizeof(buf2));	
 			}
 			exit(0);
