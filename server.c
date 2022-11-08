@@ -67,7 +67,9 @@ int main(int argc, char **argv) {
 			{
 				// include pipe structure to allow multiple clients to connect
 				printf("%s", "String received from and resent to the client:");
-				
+				puts(buf1);
+				send(connfd, buf1, n, 0);
+
 				// Closing ends of pipe that will not be used in child process
 				close(pipefd_1[1]); // write closed
                 		close(pipefd_2[0]); // read closed
@@ -77,6 +79,7 @@ int main(int argc, char **argv) {
 
                 		//printf('Reading from %s buffer\n', buf1);
                 		read(pipefd_1[0], buf1, sizeof(buf1));
+				memset(buf1, 0, MAXLINE);
 			}
 
 			// Fix this if statement
@@ -88,6 +91,7 @@ int main(int argc, char **argv) {
 			if (n < 0) 
 			{
 				printf("%s\n", "Read error");
+				exit(0);
 			}
 			
 			else // parent process
@@ -102,7 +106,7 @@ int main(int argc, char **argv) {
         			//printf('Reading from %s buffer\n', buf2);
         			read(pipefd_2[0], buf2, sizeof(buf2));	
 			}
-			exit(0);
+			//exit(0);
 		}
 		// close socket of the server
 		close(connfd);
