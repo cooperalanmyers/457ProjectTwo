@@ -5,10 +5,14 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 #define MAXLINE 4096   /*max text line length*/
 #define SERV_PORT 3000 /*port*/
 #define LISTENQ 8	   /*maximum number of client connections*/
+#define READ 0
+#define WRITE 1
+
 
 /*IPC pipes with forking www.tutorialspoint.com/inter_process_communication/inter_process_communication_pipes.htm*/
 
@@ -70,15 +74,32 @@ int main(int argc, char **argv) {
 				puts(buf1);
 				send(connfd, buf1, n, 0);
 
+				
 				// Closing ends of pipe that will not be used in child process
-				close(pipefd_1[1]); // write closed
-                		close(pipefd_2[0]); // read closed
+				close(pipefd_1[WRITE]); // write closed
+                		close(pipefd_2[READ]); // read closed
 
                 		//printf('Writing to %s buffer\n', buf2);
-                		write(pipefd_2[1], buf2, sizeof(buf2));
+                		write(pipefd_2[WRITE], buf2, sizeof(buf2));
 
                 		//printf('Reading from %s buffer\n', buf1);
-                		read(pipefd_1[0], buf1, sizeof(buf1));
+                		read(pipefd_1[READ], buf1, sizeof(buf1));
+				
+				/*
+
+				if (pipe(pipefd_1) == -1) {
+        				fprintf(stderr, "Pipe Failed");
+        				return 1;
+    				}
+
+				close(pipefd_1[READ]);
+				write(pipefd_1[WRITE], buf1, strlen(buf1) + 1);
+				close(pipefd_1[WRITE]);
+
+				printf("Test %s", buf1);
+				*/
+
+
 				memset(buf1, 0, MAXLINE);
 			}
 
@@ -97,15 +118,29 @@ int main(int argc, char **argv) {
 
 		else // parent process
 		{
+			/*
+			for (;;){
+				close(pipefd_1[WRITE]);
+				read(pipefd_1[READ], buf1, strlen(buf1));
+				printf(" %s", buf1);
+				close(pipefd_1[READ]);
+				sleep(3);
+			}
+			*/
+
+
 			// Closing ends of pipe that will not be used in parent process
-			close(pipefd_1[0]); // read closed
-        		close(pipefd_2[1]); // write closed
+			close(pipefd_1[READ]); // read closed
+        		close(pipefd_2[WRITE]); // write closed
 
         		//printf('Writing to %s buffer\n', buf1);
-        		write(pipefd_1[1], buf1, sizeof(buf1));
-        	
+        		write(pipefd_1[WRITE], buf1, sizeof(buf1));
+        		printf("%s", "PARENT: ");
+			puts(buf1);	
+
         		//printf('Reading from %s buffer\n', buf2);
-        		read(pipefd_2[0], buf2, sizeof(buf2));	
+        		read(pipefd_2[READ], buf2, sizeof(buf2));	
+			
 		}
 		// close socket of the server
 		close(connfd);
