@@ -123,6 +123,13 @@ int main(int argc, char **argv) {
 
 				write(pipefd_1[WRITE], buf1, sizeof(buf1));
 
+				// Need to get a way for parent to break out, or change for to a while loop
+				//
+				/*
+				if((buf1) == '0'){
+					break;
+				}
+				*/
 			}
 		}
 		// close socket of the server
