@@ -26,7 +26,15 @@ int main(int argc, char **argv) {
 	// Creating two pipes for sending/recieving
    	int pipefd_1[2]; // parent write open, read close
     	int pipefd_2[2]; // parent write close, read open
-	
+
+	if (pipe(pipefd_1) < 0) {
+        	exit(1);
+	}
+	if (pipe(pipefd_2) < 0) {
+                exit(1);
+        }
+
+
 	struct sockaddr_in cliaddr, servaddr;
 
 	// Create a socket for the server
@@ -80,10 +88,10 @@ int main(int argc, char **argv) {
                 		close(pipefd_2[READ]); // read closed
 
                 		//printf('Writing to %s buffer\n', buf2);
-                		write(pipefd_2[WRITE], buf2, sizeof(buf2));
+                		write(pipefd_2[WRITE], buf1, sizeof(buf1));
 
                 		//printf('Reading from %s buffer\n', buf1);
-                		read(pipefd_1[READ], buf1, sizeof(buf1));
+                		read(pipefd_1[READ], buf2, sizeof(buf2));
 				
 				/*
 
@@ -128,19 +136,19 @@ int main(int argc, char **argv) {
 			}
 			*/
 
-
+			for(;;) {
 			// Closing ends of pipe that will not be used in parent process
-			close(pipefd_1[READ]); // read closed
-        		close(pipefd_2[WRITE]); // write closed
+				close(pipefd_1[READ]); // read closed
+        			close(pipefd_2[WRITE]); // write closed
 
         		//printf('Writing to %s buffer\n', buf1);
-        		write(pipefd_1[WRITE], buf1, sizeof(buf1));
-        		printf("%s", "PARENT: ");
-			puts(buf1);	
+        			write(pipefd_1[WRITE], buf2, sizeof(buf2));
 
         		//printf('Reading from %s buffer\n', buf2);
-        		read(pipefd_2[READ], buf2, sizeof(buf2));	
-			
+        			read(pipefd_2[READ], buf1, sizeof(buf1));	
+				printf("Parent : %s\n", buf1);	
+				sleep(1);
+			}
 		}
 		// close socket of the server
 		close(connfd);
