@@ -81,7 +81,6 @@ int main(int argc, char **argv) {
 				printf("%s", "String received from and resent to the client:");
 				puts(buf1);
 				send(connfd, buf1, n, 0);
-
 				
 				// Closing ends of pipe that will not be used in child process
 				close(pipefd_1[WRITE]); // write closed
@@ -92,21 +91,8 @@ int main(int argc, char **argv) {
 
                 		//printf('Reading from %s buffer\n', buf1);
                 		read(pipefd_1[READ], buf2, sizeof(buf2));
-				
-				/*
-
-				if (pipe(pipefd_1) == -1) {
-        				fprintf(stderr, "Pipe Failed");
-        				return 1;
-    				}
-
-				close(pipefd_1[READ]);
-				write(pipefd_1[WRITE], buf1, strlen(buf1) + 1);
-				close(pipefd_1[WRITE]);
-
-				printf("Test %s", buf1);
-				*/
-
+				printf("CHILD : %s", buf2);
+				sleep(1);
 
 				memset(buf1, 0, MAXLINE);
 			}
@@ -126,28 +112,17 @@ int main(int argc, char **argv) {
 
 		else // parent process
 		{
-			/*
-			for (;;){
-				close(pipefd_1[WRITE]);
-				read(pipefd_1[READ], buf1, strlen(buf1));
-				printf(" %s", buf1);
-				close(pipefd_1[READ]);
-				sleep(3);
-			}
-			*/
-
 			for(;;) {
-			// Closing ends of pipe that will not be used in parent process
+				// Closing ends of pipe that will not be used in parent process
 				close(pipefd_1[READ]); // read closed
         			close(pipefd_2[WRITE]); // write closed
 
-        		//printf('Writing to %s buffer\n', buf1);
-        			write(pipefd_1[WRITE], buf2, sizeof(buf2));
-
-        		//printf('Reading from %s buffer\n', buf2);
         			read(pipefd_2[READ], buf1, sizeof(buf1));	
 				printf("Parent : %s\n", buf1);	
 				sleep(1);
+
+				write(pipefd_1[WRITE], buf1, sizeof(buf1));
+
 			}
 		}
 		// close socket of the server
