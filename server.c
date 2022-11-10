@@ -97,17 +97,9 @@ int main(int argc, char **argv) {
 				memset(buf1, 0, MAXLINE);
 			}
 
-			// Fix this if statement
-			/*if (n < 0)
+			if (n < 0)
 				printf("%s\n", "Read error");
 			exit(0);
-			*/
-			
-			if (n < 0) 
-			{
-				printf("%s\n", "Read error");
-				exit(0);
-			}
 		}
 
 		else // parent process
@@ -122,7 +114,9 @@ int main(int argc, char **argv) {
 				sleep(1);
 
 				write(pipefd_1[WRITE], buf1, sizeof(buf1));
-
+				
+				sleep(5);
+				break;
 				// Need to get a way for parent to break out, or change for to a while loop
 				//
 				/*
